@@ -24,9 +24,12 @@ class InicioComponent extends Component
     public $showPrestamo = 1;
     public $showCuotas = 1;
     public $showAbonar = 1;
+    public $showCreditos = 1;
 
     public $prestamos = [];
     public $nombreCliente, $monto_cuota, $idPrestamo;
+
+    public $abonos = [];
 
     protected $listeners = [
         'enviarSolicitud' => 'guardarSolicitud',
@@ -35,6 +38,8 @@ class InicioComponent extends Component
         'showcuotas' => 'mostrarCuotas',
         'hidecuotas' => 'ocultarCuotas',
         'saveCuota' => 'guardarCuota',
+        'showCredito' => 'mostrarCredito',
+        'hideCredito' => 'ocultarCredito',
     ];
 
     public function render()
@@ -147,11 +152,11 @@ class InicioComponent extends Component
 
     public function searchCredit()
     {
-        $cli_cedula = Cliente::where('cedula', $this->cedula)->first();
-        // Prestamo del cliente donde el id sea igual a
-        $this->prestamos =  Prestamo::where('cliente_id', $cli_cedula->id)->get();
+        $this->prestamos = Prestamo::orWhereHas('cliente', function ($query) {
+            $query->where('cedula', $this->cedula);
+        })->get();
 
-        return view('livewire.inicio-component',['prestamos' => $this->prestamos]);
+        return view('livewire.inicio-component', ['prestamos' => $this->prestamos]);
     }
 
     public function abonarCuota($id)
@@ -159,14 +164,14 @@ class InicioComponent extends Component
         $prestamo = Prestamo::find($id);
         $this->idPrestamo = $prestamo->id;
         $this->nombreCliente = $prestamo->cliente->nombre;
-       
+
         $this->showAbonar = 0;
         return redirect()->back();
     }
 
     public function guardarCuota()
     {
-       Abono::create([
+        Abono::create([
             'monto' => $this->monto_cuota,
             'fecha' => date('Y-m-d'),
             'prestamo_id' => $this->idPrestamo,
@@ -174,5 +179,22 @@ class InicioComponent extends Component
         $this->reset();
         $this->showAbonar = 1;
         return redirect()->back();
+    }
+
+
+    // Mostrar las cuotas del prestamo
+    public function showCuotasPrestamo($id)
+    {
+        $this->abonos = Abono::where('prestamo_id', $id)->get();
+        return view('livewire.inicio-component', ['abonos' => $this->abonos]);
+    }
+
+    public function mostrarCredito()
+    {
+        $this->showCreditos = 0;
+    }
+    public function ocultarCredito()
+    {
+        $this->showCreditos = 1;
     }
 }
