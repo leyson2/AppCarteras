@@ -15,7 +15,7 @@
               <a class="nav-link" href="{{ url('/panel') }}">Administrador</a>
             </li>
             <li class="nav-item">
-                @if($show == 1)
+                @if($showPrestamo == 1)
               <button class="nav-link nav-btn" wire:click="$emit('mostrar')">Pedir mi crédito</button>
                 @else
                 <button class="nav-link nav-btn" wire:click="$emit('ocultar')">Pedir mi crédito</button>
@@ -25,7 +25,8 @@
         </div>
       </nav>
         <div class="hero-header">
-            <div class="col-md-12 hero-content">
+            <div class="row">
+            <div class="col-md-6 hero-content" id="hero">
                     <h1 class="card-title">¡Bienvenido!</h1>
                     <p class="card-text">
                     ¡Bienvenido a nuestra plataforma de créditos!
@@ -36,7 +37,6 @@
                     <p class="card-text">
                         una gran cantidad de dinero.
                         </p>
-                  
                     <p class="card-text text-two">
                         Créditos hasta de $1.200.000. <br>
                         Aprobados en 15 minutos. <br>
@@ -51,8 +51,8 @@
                         @endif
                     </div>
                 </div>
-        </div>
- @if($show == 0)
+                <div class="col-md-6 formularios">
+                    @if($showPrestamo == 0)
     <div class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
             <div class="container">
@@ -124,9 +124,8 @@
                             </div>
                           </div>
                     </div>
-                    <div class="col-md-6">
-                       .
-                    </div>
+                  
+             
                 </div>
             </div>
         </div>
@@ -210,6 +209,10 @@
     </div>
 </div>
 @endif
+                </div>
+            </div>
+        </div>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
@@ -237,6 +240,9 @@
         box-shadow: 1px 1px 5px rgba(0,0,0, 0.2);
         text-transform: uppercase;
     }
+    #hero{
+        padding: 7% 0px 0px 5%;
+    }
     .hero-header{
         padding: 10px;
         width: 100%;
@@ -249,7 +255,6 @@
     .hero-content{
         padding: 45px;
         width: 100%;
-        margin: 150px auto;
         color: rgb(0, 64, 107);
     }
     .hero-content .card-title{
@@ -271,6 +276,10 @@
         font-weight: bold;
         margin-top: 14px;
         padding: 10px;
+    }
+    .formularios{
+        position: relative;
+        top: 100px !important;
     }
 
 </style>

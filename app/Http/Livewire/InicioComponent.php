@@ -21,7 +21,7 @@ class InicioComponent extends Component
     public $totalCuotas; // montoTotal / cuotas
     public $porcentajeIntereses; // intereses * 100
     public $intereses;
-    public $show = 1;
+    public $showPrestamo = 1;
     public $showCuotas = 1;
     public $showAbonar = 1;
 
@@ -30,8 +30,8 @@ class InicioComponent extends Component
 
     protected $listeners = [
         'enviarSolicitud' => 'guardarSolicitud',
-        'mostrar' => 'mostrarComponente',
-        'ocultar' => 'ocultarComponente',
+        'mostrar' => 'showComponentCliente',
+        'ocultar' => 'hiddenComponentCliente',
         'showcuotas' => 'mostrarCuotas',
         'hidecuotas' => 'ocultarCuotas',
         'saveCuota' => 'guardarCuota',
@@ -122,21 +122,22 @@ class InicioComponent extends Component
         return redirect()->back();
     }
 
-    public function mostrarComponente()
+    public function showComponentCliente()
     {
-        $this->show = 0;
-        $this->showAbonar = 1;
+        $this->showPrestamo = 0;
+        $this->showCuotas = 1;
     }
-    public function ocultarComponente()
+    public function hiddenComponentCliente()
     {
-        $this->show = 1;
+        $this->showPrestamo = 1;
     }
 
     // ----------------------------------------------------------------------------------------------
     public function mostrarCuotas()
     {
         $this->showCuotas = 0;
-        $this->show = 1;
+        $this->showPrestamo = 1;
+        $this->showAbonar = 1;
     }
     public function ocultarCuotas()
     {
