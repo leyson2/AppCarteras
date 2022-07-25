@@ -11,7 +11,7 @@ use Termwind\Components\Dd;
 
 class InicioComponent extends Component
 {
-    public $monto, $nombre, $correo, $telefono, $direccion, $cuotas = 1, $cedula;
+    public $monto=0, $nombre, $correo, $telefono, $direccion, $cuotas = 24, $cedula;
 
     // Intereses -> cuotas >= 24 -> 0.0139 si cuotas <= 48 -> 0.0174
 
@@ -51,17 +51,20 @@ class InicioComponent extends Component
     }
     public function calcularDatos()
     {
-        if ($this->cuotas <= 24) {
-            $this->intereses = 0.0139;
-        } elseif ($this->cuotas > 24 && $this->cuotas <= 48) {
+        if ($this->cuotas ==48 ) {
+            $this->intereses = 0.0825;
+        } elseif ($this->cuotas > 24 && $this->cuotas <= 34) {
             $this->intereses = 0.0174;
+        }else{
+
+            $this->intereses = 0.0190;
         }
 
         $this->totalIntereses = $this->monto * $this->intereses;
         $this->montoTotal = $this->monto + $this->totalIntereses;
         // Calculo de cuotas con 2 decimales
         $this->totalCuotas = number_format($this->montoTotal / $this->cuotas, 2);
-        $this->porcentajeIntereses = $this->intereses * 100;
+        $this->porcentajeIntereses = $this->intereses;
     }
 
     protected $rules = [

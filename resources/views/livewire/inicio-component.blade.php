@@ -101,7 +101,7 @@
                                                             <div class="form-group mt-1">
                                                                 <label for="monto" class="text-muted">Monto</label>
                                                                 <input type="number" class="form-control"
-                                                                    wire:model="monto">
+                                                                    wire:model.lazy="monto">
                                                             </div>
                                                             <div class="form-group mt-1">
                                                                 <label class="text-muted"
@@ -117,9 +117,9 @@
                                                                 <label class="text-muted" for="cuotas">¿A cuántas
                                                                     cuotas?</label>
                                                                 <input type="number" class="form-control"
-                                                                    wire:model="cuotas">
-                                                                <span class="text-muted">Elije un plazo desde 24 y hasta
-                                                                    48 meses</span>
+                                                                    wire:model="cuotas" min="24"  max="48">
+                                                                <span class="text-muted"> <strong>Elije un plazo desde 24 y hasta
+                                                                    48 meses</strong></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
