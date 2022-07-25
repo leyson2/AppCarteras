@@ -11,9 +11,6 @@
         <div class="collapse navbar-collapse justify-content-end m-3">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Inicio</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="{{ url('/panel') }}">Administrador</a>
                 </li>
                 <li class="nav-item">
@@ -101,7 +98,7 @@
                                                             <div class="form-group mt-1">
                                                                 <label for="monto" class="text-muted">Monto</label>
                                                                 <input type="number" class="form-control"
-                                                                    wire:model.lazy="monto">
+                                                                    wire:model.lazy="monto" min="500000" max="1200000">
                                                             </div>
                                                             <div class="form-group mt-1">
                                                                 <label class="text-muted"

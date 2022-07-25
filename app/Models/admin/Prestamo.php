@@ -11,7 +11,7 @@ class Prestamo extends Model
 
     protected $table = 'prestamos';
     protected $fillable = ['cliente_id', 'montoprestamo', 'interes', 'nmeses', 'montopagar', 'fecha_inicio', 'fecha_fin', 'proximo_pago', 'estado'];
-
+    
     public function cliente()
     {
         return $this->belongsTo(Cliente::class);
