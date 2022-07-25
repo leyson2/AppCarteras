@@ -17,7 +17,6 @@ class PrestamoFactory extends Factory
     public function definition()
     {
         return [
-            //
         ];
     }
 }

@@ -17,7 +17,6 @@ class ClienteFactory extends Factory
     public function definition()
     {
         return [
-            //
         ];
     }
 }

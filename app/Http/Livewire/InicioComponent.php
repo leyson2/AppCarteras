@@ -51,9 +51,9 @@ class InicioComponent extends Component
     public function calcularDatos()
     {
         if ($this->cuotas <= 24) {
-            $this->intereses = 0.0139;
+            $this->intereses = 0.0139 * $this->cuotas;
         } elseif ($this->cuotas > 24 && $this->cuotas <= 48) {
-            $this->intereses = 0.0174;
+            $this->intereses = 0.0174 * $this->cuotas;
         }
 
         $this->totalIntereses = $this->monto * $this->intereses;
