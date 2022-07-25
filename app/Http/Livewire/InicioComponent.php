@@ -268,3 +268,4 @@ class InicioComponent extends Component
         $this->showCreditos = 1;
     }
 }
+
