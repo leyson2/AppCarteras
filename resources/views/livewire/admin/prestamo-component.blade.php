@@ -1,84 +1,82 @@
 <div>
     <div class="container">
      <div class="row">
-         <div class="col-md-4">
+        <div class="col-md-2">
+            <div class="card mt-4">
+                <div class="card-header bg-gray">
+                    <span class="text-white">Actualizar</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mt-1">
+                        <label for="estado">Estado</label>
+                        <select class="form-control" wire:model="estadoId">
+                            <option value="1">Aprobado</option>
+                            <option value="2">Rechazado</option>
+                            <option value="3">Pagado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-info btn-sm" wire:click="$emit('update')">Actualizar</button>
+                </div>
+            
+        </div> 
+        </div>
+         <div class="col-md-10">
              <div class="card mt-4">
                  <div class="card-header bg-secondary">
-                     <h3 class="card-title">Prestamo |{{$formTitle}}</h3>
+                     <h3 class="card-title">Prestamo |Listado</h3>
+              
                  </div>
                  <div class="card-body">
-                     <div class="row">
-                         <div class="col-md-6">
-                             <div class="form-group mt-1">
-                                 <label for="monto" class="text-muted">Monto a pagar</label>
-                                 <input type="number" class="form-control" wire:model="monto_pagar">
-                                 @error('monto')
-                                     <span class="text-danger">{{ $message }}</span>
-                                 @enderror
-                               </div>
-                               <div class="form-group">
-                                 <label for="interes" class="text-muted">Interes</label>
-                                 <input type="number" class="form-control" wire:model="interes">
-                                 @error('interes')
-                                     <span class="text-danger">{{ $message }}</span>
-                                 @enderror
-                               </div>
-                               <div class="form-group mt-1">
-                                 <label for="email" class="text-muted">Cliente</label>
-                                 <select wire:model="idCliente" class="form-control">
-                                        @foreach($clientes as $cliente)
-                                            <option value="{{$cliente->id}}">{{$cliente->nombre}}</option>
-                                        @endforeach
-                                 </select>
-                                 @error('correo')
-                                     <span class="text-danger">{{ $message }}</span>
-                                 @enderror
-                               </div>
-                         </div>
-                     </div>
-                     <div class="form-group mt-4">
-                        @if($accion == 'Editar')
-                             <button wire:click="actualizarprestamo" class="btn btn-primary">Actualizar</button>
-                        @else
-                         <button wire:click="agregarprestamo" class="btn btn-success">Guardar</button>
-                         @endif
-                     </div>
-               
-                 </div>
-                 <div class="card-footer">
- 
-                 </div>
-             </div>
-         </div>
-         <div class="col-md-8">
-             <div class="card mt-4">
-                 <div class="card-header bg-secondary">
-                     <h3 class="card-title">prestamo |Listado</h3>
-                 </div>
-                 <div class="card-body">
-                     <table class="table table-striped">
+                     <table class="table table-striped text-center">
                          <thead>
                            <tr>
                              <th scope="col">Cliente</th>
                              <th scope="col">Monto Prestado</th>
+                             <th scope="col">Monto A Pagar</th>
                              <th scope="col">N° Meses</th>
-                             <th scope="col">Fecha Inicio</th>
+                             <th scope="col">Fecha</th>
+                             <th scope="col">Próximo Pago</th>
+                             <th scope="col">Estado</th>
                              <th scope="col">Acciones</th>
                            </tr>
                          </thead>
                          <tbody>
-                             @foreach ($prestamos as $prestamo)
+                             @forelse($prestamos as $prestamo)
                                  <tr>
-                                     <td>{{ $prestamo->cliente_id }}</td>
-                                     <td>{{ $prestamo->montoprestamo }}</td>
+                                     <td>{{ $prestamo->cliente->nombre}}</td>
+                                     <td>${{ $prestamo->montoprestamo }}</td>
+                                     <td>${{ $prestamo->montopagar }}</td>
                                      <td>{{ $prestamo->nmeses }}</td>
-                                     <td>${{ $prestamo->fecha_inicio }}</td>
+                                     <td>{{ $prestamo->fecha_inicio }}</td>
+                                     <td>{{ $prestamo->proximo_pago }}</td>
                                      <td>
-                                         <button wire:click="editarprestamo({{ $prestamo->id }})" class="btn btn-warning btn-sm">Editar</button>
-                                         <button wire:click="eliminarprestamo({{ $prestamo->id }})" class="btn btn-danger btn-sm">Eliminar</button>
+
+                                        @if($prestamo->estado == 'Pendiente')
+                                        <span class="badge badge-info">{{ $prestamo->estado }}</span>
+                                        @elseif($prestamo->estado == 'Aprobado')
+                                        <span class="badge badge-success">{{ $prestamo->estado }}</span>
+                                        @elseif($prestamo->estado == 'No Aprobado')
+                                        <span class="badge badge-danger">{{ $prestamo->estado }}</span>
+                                        @else
+                                        <span class="badge badge-warning">{{ $prestamo->estado }}</span>
+                                        @endif
+                                     </td>
+                                     <td>
+                                         <button wire:click="editarEstado({{ $prestamo->id }})" class="btn btn-secondary btn-sm">Editar</button>
+                                         @if($showAbonos == 1)
+                                         <button wire:click="showAbono({{ $prestamo->id }})" class="btn btn-primary btn-sm">Abonos</button>
+                                         @else
+                                         <button wire:click="hideAbono({{ $prestamo->id }})" class="btn btn-secondary btn-sm">Ocultar</button>
+                                            @endif
                                      </td>
                                  </tr>
-                             @endforeach
+                                 @empty
+                                 <td>
+                                    <span class="badge badge-info">No hay datos agregados en la base de datos</span>
+                                 </td>
+                             @endforelse
                          </tbody>
                        </table>
                  </div>
@@ -88,6 +86,43 @@
              </div>
          </div>
      </div>
+@if($showAbonos == 0)
+     <div class="row">
+        <div class="col-md-12">
+            @if (count($abonos) > 0)
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Monto</th>
+                            <th scope="col">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($abonos as $abono)
+                            <tr>
+                                <td>${{ $abono->monto }}
+                                </td>
+                                <td>{{ $abono->fecha }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot style="background-color:gray;">
+                        <tr>
+                            <td>Total Abonado</td>
+                            <td>${{ $totalAbonos }}</td>
+                        </tr>
+                        <tr>
+                            <td>Monto Restante</td>
+                            <td>${{ $totalRestante }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            @else
+            @endif
+        </div>
+    </div>
+@endif
+
     </div>
  </div>
  
