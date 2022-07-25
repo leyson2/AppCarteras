@@ -11,7 +11,7 @@ use Termwind\Components\Dd;
 
 class InicioComponent extends Component
 {
-    public $monto=0, $nombre, $correo, $telefono, $direccion, $cuotas = 24, $cedula;
+    public $monto = 0, $nombre, $correo, $telefono, $direccion, $cuotas = 24, $cedula;
 
     // Intereses -> cuotas >= 24 -> 0.0139 si cuotas <= 48 -> 0.0174
 
@@ -51,33 +51,28 @@ class InicioComponent extends Component
     }
     public function calcularDatos()
     {
-<<<<<<< HEAD
-        if ($this->cuotas ==48 ) {
-            $this->intereses = 0.0825;
-        } elseif ($this->cuotas > 24 && $this->cuotas <= 34) {
-            $this->intereses = 0.0174;
-        }else{
+        if ($this->cuotas <= 12) {
 
-            $this->intereses = 0.0190;
-=======
-        if ($this->cuotas <= 24) {
-            $this->intereses = 0.0139 * $this->cuotas;
-            $this->porcentajeIntereses = 0.0139 * 100;
-        } elseif ($this->cuotas > 24 && $this->cuotas <= 48) {
+            $this->intereses = 0.0104 * $this->cuotas;
+            $this->porcentajeIntereses = 0.0104 * 100;
+        } elseif ($this->cuotas >= 13 && $this->cuotas <= 24) {
+
+            $this->intereses = 0.0129 * $this->cuotas;
+            $this->porcentajeIntereses = 0.0129 * 100;
+        } elseif ($this->cuotas > 24 && $this->cuotas <= 36) {
+
+            $this->intereses = 0.0156 * $this->cuotas;
+            $this->porcentajeIntereses = 0.0156 * 100;
+        } else {
+
             $this->intereses = 0.0174 * $this->cuotas;
             $this->porcentajeIntereses = 0.0174 * 100;
->>>>>>> 97a9d0e1ecc1d55cd84db748793bfbcd2fe69189
         }
 
         $this->totalIntereses = $this->monto * $this->intereses;
         $this->montoTotal = $this->monto + $this->totalIntereses;
         // Calculo de cuotas con 2 decimales
         $this->totalCuotas = number_format($this->montoTotal / $this->cuotas, 2);
-<<<<<<< HEAD
-        $this->porcentajeIntereses = $this->intereses;
-=======
-        
->>>>>>> 97a9d0e1ecc1d55cd84db748793bfbcd2fe69189
     }
 
     protected $rules = [
@@ -87,7 +82,7 @@ class InicioComponent extends Component
         'telefono' => 'required|numeric',
         'direccion' => 'required',
         'cuotas' => 'required|numeric',
-        'cedula' => 'required|numeric',
+        'cedula' => 'required|numeric'
     ];
 
     protected $messages = [
@@ -232,10 +227,9 @@ class InicioComponent extends Component
             Prestamo::find($this->idPrestamo)->update(['proximo_pago' => date('Y-m-d', strtotime('+1 month', strtotime($this->prestamo->proximo_pago)))]);
 
             $this->totalAbonos = Abono::where('prestamo_id', $this->idPrestamo)->sum('monto');
-            if($totalPrestado == $this->totalAbonos){
+            if ($totalPrestado == $this->totalAbonos) {
                 Prestamo::find($this->idPrestamo)->update(['estado' => 'Pagado']);
             }
-
         }
 
 
@@ -268,4 +262,3 @@ class InicioComponent extends Component
         $this->showCreditos = 1;
     }
 }
-

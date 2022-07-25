@@ -117,9 +117,9 @@
                                                                 <label class="text-muted" for="cuotas">¿A cuántas
                                                                     cuotas?</label>
                                                                 <input type="number" class="form-control"
-                                                                    wire:model="cuotas" min="24"  max="48">
-                                                                <span class="text-muted"> <strong>Elije un plazo desde 24 y hasta
-                                                                    48 meses</strong></span>
+                                                                    wire:model="cuotas" min="1"  max="72">
+                                                                <span class="text-muted"> <strong>Elije un plazo desde 1 y hasta
+                                                                    72 meses</strong></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
