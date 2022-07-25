@@ -53,15 +53,17 @@ class InicioComponent extends Component
     {
         if ($this->cuotas <= 24) {
             $this->intereses = 0.0139 * $this->cuotas;
+            $this->porcentajeIntereses = 0.0139 * 100;
         } elseif ($this->cuotas > 24 && $this->cuotas <= 48) {
             $this->intereses = 0.0174 * $this->cuotas;
+            $this->porcentajeIntereses = 0.0174 * 100;
         }
 
         $this->totalIntereses = $this->monto * $this->intereses;
         $this->montoTotal = $this->monto + $this->totalIntereses;
         // Calculo de cuotas con 2 decimales
         $this->totalCuotas = number_format($this->montoTotal / $this->cuotas, 2);
-        $this->porcentajeIntereses = $this->intereses * 100;
+        
     }
 
     protected $rules = [
