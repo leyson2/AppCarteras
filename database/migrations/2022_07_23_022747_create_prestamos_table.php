@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('fecha_inicio')->comment('Fecha de fin del préstamo');
             $table->date('fecha_fin')->nullable()->comment('Fecha de fin del préstamo');
             $table->date('proximo_pago')->comment('Fecha del próximo pago');
-            $table->enum('estado', ['Pendiente', 'Pagado', 'Aprobado'])->default('Pendiente')->comment('Estado del préstamo');
+            $table->enum('estado', ['Pendiente', 'Pagado', 'Aprobado', 'No Aprobado'])->default('Pendiente')->comment('Estado del préstamo');
             $table->unsignedBigInteger('cliente_id')->comment('Cliente del préstamo');
             $table->timestamps();
 

@@ -76,8 +76,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group mt-1">
-                                                                <label for="nombre" class="text-muted">Nombre
-                                                                    {{ $nombre }}</label>
+                                                                <label for="nombre" class="text-muted">Nombre </label>
                                                                 <input type="text" class="form-control"
                                                                     wire:model="nombre">
                                                             </div>
@@ -203,7 +202,12 @@
                                                                         @endforeach
                                                                     </tbody>
                                                                 </table>
-                                                            @else
+                                                                @else
+                                                                @if ($mensaje != '')
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        <strong>{{$mensaje}}</strong>
+                                                                    </div>
+                                                                    @endif
                                                             @endif
                                                         </div>
                                                     </div>
@@ -214,7 +218,7 @@
                                                                     <label class="text-muted"
                                                                         for="monto">Monto</label>
                                                                     <input type="number" class="form-control"
-                                                                        wire:model="monto_cuota">
+                                                                        wire:model="monto_cuota" value="{{$minMonto}}" min="{{$minMonto}}" max="{{$totalRestante}}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
@@ -225,18 +229,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="row">   
+                                                            <div class="col-md-12">
+                                                                <div class="form-group mt-2">
+                                                                    <label class="text-muted">Valor restante para saldar la deuda: </label>
+                                                                    <span class="text-muted">${{ $totalRestante }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="form-group mt-4">
                                                             <button wire:click="$emit('saveCuota')"
-                                                                class="btn btn-success">Confirmar pago</button>
+                                                                class="btn btn-success">confirmar pago</button>
                                                         </div>
                                                     @endif
-
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -259,7 +268,7 @@
                                                             wire:model="cedula"
                                                             placeholder="Ingrese su número de cédula, para buscar su crédito...">
                                                         <button class="btn btn-secondary mt-2"
-                                                            wire:click="searchCredit">Buscar crédito</button>
+                                                            wire:click="searchAllCredit">Buscar crédito</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -292,7 +301,7 @@
                                                                         @endforeach
                                                                     </tbody>
                                                                 </table>
-                                                            @else
+                                                           
                                                             @endif
                                                         </div>
                                                     </div>
@@ -316,12 +325,21 @@
                                                                             </tr>
                                                                         @endforeach
                                                                     </tbody>
+                                                                    <tfoot style="background-color:gray;">
+                                                                        <tr>
+                                                                            <td>Total Abonado</td>
+                                                                            <td>${{ $totalAbonos }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Monto Restante</td>
+                                                                            <td>${{ $totalRestante }}</td>
+                                                                        </tr>
+                                                                    </tfoot>
                                                                 </table>
-                                                            @else
+                                                           
                                                             @endif
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
 
@@ -375,7 +393,7 @@
         background-color: blue;
         color: white !important;
         font-size: 14px;
-        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         text-transform: uppercase;
     }
 
@@ -415,7 +433,7 @@
         background-color: blue;
         color: white !important;
         font-size: 12px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         text-transform: uppercase;
         font-weight: bold;
         margin-top: 14px;

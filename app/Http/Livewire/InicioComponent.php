@@ -27,9 +27,10 @@ class InicioComponent extends Component
     public $showCreditos = 1;
 
     public $prestamos = [];
-    public $nombreCliente, $monto_cuota, $idPrestamo;
+    public $nombreCliente, $monto_cuota, $idPrestamo, $minMonto, $minAmount;
 
     public $abonos = [];
+    public $totalAbonos, $montoRestante, $prestamo, $totalRestante, $mensaje = '';
 
     protected $listeners = [
         'enviarSolicitud' => 'guardarSolicitud',
@@ -131,6 +132,7 @@ class InicioComponent extends Component
     {
         $this->showPrestamo = 0;
         $this->showCuotas = 1;
+        $this->showCreditos = 1;
     }
     public function hiddenComponentCliente()
     {
@@ -143,6 +145,7 @@ class InicioComponent extends Component
         $this->showCuotas = 0;
         $this->showPrestamo = 1;
         $this->showAbonar = 1;
+        $this->showCreditos = 1;
     }
     public function ocultarCuotas()
     {
@@ -153,29 +156,73 @@ class InicioComponent extends Component
     public function searchCredit()
     {
         $this->prestamos = Prestamo::orWhereHas('cliente', function ($query) {
+            $query->where('cedula', $this->cedula)->where('estado', '=', 'Aprobado');
+        })->get();
+
+        if ($this->prestamos->isEmpty()) {
+            $this->mensaje = 'No hay creditos por pagar';
+        } else {
+            $this->mensaje = '';
+        }
+        return view('livewire.inicio-component', ['prestamos' => $this->prestamos]);
+    }
+
+    public function searchAllCredit()
+    {
+        $this->prestamos = Prestamo::orWhereHas('cliente', function ($query) {
             $query->where('cedula', $this->cedula);
         })->get();
 
         return view('livewire.inicio-component', ['prestamos' => $this->prestamos]);
     }
 
+
     public function abonarCuota($id)
     {
-        $prestamo = Prestamo::find($id);
-        $this->idPrestamo = $prestamo->id;
-        $this->nombreCliente = $prestamo->cliente->nombre;
+        $this->totalAbonos = Abono::where('prestamo_id', $id)->sum('monto');
+        $this->prestamo = Prestamo::find($id);
+
+        $this->idPrestamo = $this->prestamo->id;
+        $this->nombreCliente = $this->prestamo->cliente->nombre;
+        $this->minMonto = number_format(($this->prestamo->montopagar / $this->prestamo->nmeses), 2, '.', '');
+
+        $totalPrestado = $this->prestamo->montopagar;
+        $this->totalRestante = $totalPrestado - $this->totalAbonos;
 
         $this->showAbonar = 0;
+
         return redirect()->back();
     }
 
     public function guardarCuota()
     {
-        Abono::create([
-            'monto' => $this->monto_cuota,
-            'fecha' => date('Y-m-d'),
-            'prestamo_id' => $this->idPrestamo,
-        ]);
+        // Consultar la suma de la columna monto de la tabla abono para el prestamo seleccionado
+        $this->totalAbonos = Abono::where('prestamo_id', $this->idPrestamo)->sum('monto');
+        $this->prestamo = Prestamo::find($this->idPrestamo);
+        $totalPrestado = $this->prestamo->montopagar;
+        $this->totalRestante = $totalPrestado - $this->totalAbonos;
+
+        // Validar que el monto a abonar no sea mayor al total restante
+        if ($this->monto_cuota > $this->totalRestante) {
+            return redirect()->back();
+        } else {
+
+            Abono::create([
+                'monto' => $this->monto_cuota,
+                'fecha' => date('Y-m-d'),
+                'prestamo_id' => $this->idPrestamo,
+            ]);
+
+            Prestamo::find($this->idPrestamo)->update(['proximo_pago' => date('Y-m-d', strtotime('+1 month', strtotime($this->prestamo->proximo_pago)))]);
+
+            $this->totalAbonos = Abono::where('prestamo_id', $this->idPrestamo)->sum('monto');
+            if($totalPrestado == $this->totalAbonos){
+                Prestamo::find($this->idPrestamo)->update(['estado' => 'Pagado']);
+            }
+
+        }
+
+
         $this->reset();
         $this->showAbonar = 1;
         return redirect()->back();
@@ -186,12 +233,19 @@ class InicioComponent extends Component
     public function showCuotasPrestamo($id)
     {
         $this->abonos = Abono::where('prestamo_id', $id)->get();
-        return view('livewire.inicio-component', ['abonos' => $this->abonos]);
+        // Consultar la suma de la columna monto de la tabla abono para el prestamo seleccionado
+        $this->totalAbonos = Abono::where('prestamo_id', $id)->sum('monto');
+        $this->prestamo = Prestamo::find($id);
+        $totalPrestado = $this->prestamo->montopagar;
+        $this->totalRestante = $totalPrestado - $this->totalAbonos;
+
+        return view('livewire.inicio-component', ['abonos' => $this->abonos, $this->totalAbonos, $this->totalRestante]);
     }
 
     public function mostrarCredito()
     {
         $this->showCreditos = 0;
+        $this->showCuotas = 1;
     }
     public function ocultarCredito()
     {
