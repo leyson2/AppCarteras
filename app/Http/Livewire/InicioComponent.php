@@ -51,6 +51,7 @@ class InicioComponent extends Component
     }
     public function calcularDatos()
     {
+<<<<<<< HEAD
         if ($this->cuotas ==48 ) {
             $this->intereses = 0.0825;
         } elseif ($this->cuotas > 24 && $this->cuotas <= 34) {
@@ -58,13 +59,25 @@ class InicioComponent extends Component
         }else{
 
             $this->intereses = 0.0190;
+=======
+        if ($this->cuotas <= 24) {
+            $this->intereses = 0.0139 * $this->cuotas;
+            $this->porcentajeIntereses = 0.0139 * 100;
+        } elseif ($this->cuotas > 24 && $this->cuotas <= 48) {
+            $this->intereses = 0.0174 * $this->cuotas;
+            $this->porcentajeIntereses = 0.0174 * 100;
+>>>>>>> 97a9d0e1ecc1d55cd84db748793bfbcd2fe69189
         }
 
         $this->totalIntereses = $this->monto * $this->intereses;
         $this->montoTotal = $this->monto + $this->totalIntereses;
         // Calculo de cuotas con 2 decimales
         $this->totalCuotas = number_format($this->montoTotal / $this->cuotas, 2);
+<<<<<<< HEAD
         $this->porcentajeIntereses = $this->intereses;
+=======
+        
+>>>>>>> 97a9d0e1ecc1d55cd84db748793bfbcd2fe69189
     }
 
     protected $rules = [
